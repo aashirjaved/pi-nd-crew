@@ -1,0 +1,19 @@
+{
+  "models": {
+    "pattern": "anthropic/claude-haiku-4-5",
+    "mapper": "anthropic/claude-opus-5-5",
+    "hyperfocus": "openai/gpt-6.1-sol",
+    "literal": "anthropic/claude-sonnet-5",
+    "bodydouble": "anthropic/claude-sonnet-5"
+  },
+  "thinking": {
+    "mapper": "high"
+  },
+  "budgetUsd": 5,
+  "bodydouble": true,
+  "orchestrate": false,
+  "hud": true,
+  "calm": false,
+  "ascii": false,
+  "frameMs": 150
+}

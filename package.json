@@ -1,0 +1,74 @@
+{
+  "name": "pi-nd-crew",
+  "version": "0.1.1",
+  "description": "Neurodivergent crew for Pi: five strengths-based subagent personas (autistic analyser, dyslexic thinker, ADHD implementer, literal reviewer, body double) with an animated minions status line showing live cost, context and what each worker is doing.",
+  "type": "module",
+  "license": "MIT",
+  "author": "nd-crew contributors",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-coding-agent",
+    "pi-extension",
+    "extension",
+    "subagents",
+    "multi-agent",
+    "orchestration",
+    "statusline",
+    "footer",
+    "neurodivergent",
+    "adhd",
+    "autism"
+  ],
+  "files": [
+    "extensions/**/*.ts",
+    "workflows/*.js",
+    "skills/**/*.md",
+    "examples/*.json",
+    "assets/*.webp",
+    "assets/*.mp4",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "pi": {
+    "extensions": [
+      "./extensions/nd-crew.ts"
+    ],
+    "skills": [
+      "./skills"
+    ],
+    "image": "https://unpkg.com/pi-nd-crew/assets/nd-crew.webp",
+    "video": "https://unpkg.com/pi-nd-crew/assets/nd-crew.mp4"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "preview": "node scripts/preview.ts",
+    "check": "npm run typecheck && npm test",
+    "gallery": "node scripts/gallery.ts",
+    "prepublishOnly": "npm run check"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*",
+    "pi-subagents": ">=0.76.0"
+  },
+  "peerDependenciesMeta": {
+    "pi-subagents": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "0.99.2",
+    "@earendil-works/pi-tui": "^0.99.2",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=20.6"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
