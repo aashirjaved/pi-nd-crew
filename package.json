@@ -5,6 +5,14 @@
   "type": "module",
   "license": "MIT",
   "author": "nd-crew contributors",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aashirjaved/pi-nd-crew.git"
+  },
+  "homepage": "https://github.com/aashirjaved/pi-nd-crew#readme",
+  "bugs": {
+    "url": "https://github.com/aashirjaved/pi-nd-crew/issues"
+  },
   "keywords": [
     "pi-package",
     "pi",
