@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="560" viewBox="0 0 920 560" role="img" aria-labelledby="t d">
+  <title id="t">The nd-crew</title>
+  <desc id="d">Five subagent personas: pattern the analyser, mapper the thinker, hyperfocus the implementer, literal the reviewer and bodydouble the advisor. Each shows its strength and the guardrail that covers its weak spot.</desc>
+  <style>
+    .bg { fill: #EEEAF8; }
+    .ink { fill: #1E1B3A; }
+    .soft { fill: #5B5480; }
+    .h { font: 800 26px -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; letter-spacing: -0.4px; }
+    .name { font: 700 19px ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+    .role { font: 600 15px -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .body { font: 400 14.5px -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .face { font: 800 16px ui-monospace, "SF Mono", Menlo, Consolas, monospace; fill: #fff; text-anchor: middle; dominant-baseline: central; }
+    .f { opacity: 0; animation: cycle var(--dur, 2s) steps(1, end) infinite; }
+    .f1 { animation-delay: 0s; } .f2 { animation-delay: calc(var(--dur, 2s) / -2); }
+    .q .f1 { animation-delay: 0s; } .q .f2 { animation-delay: calc(var(--dur) * -0.75); } .q .f3 { animation-delay: calc(var(--dur) * -0.5); } .q .f4 { animation-delay: calc(var(--dur) * -0.25); }
+    @keyframes cycle { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 0; } }
+    .q .f { animation-name: cycle4; }
+    @keyframes cycle4 { 0% { opacity: 1; } 25% { opacity: 0; } 100% { opacity: 0; } }
+    .pulse { animation: pulse 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+    @media (prefers-reduced-motion: reduce) { .f, .pulse { animation: none; } .f1 { opacity: 1; } }
+  </style>
+  <rect class="bg" width="920" height="560" rx="22"/>
+  <text class="h ink" x="36" y="54">Meet the crew</text>
+  <text class="body soft" x="36" y="80">Each persona works the way its strength works. Its tools and limits cover the matching weak spot.</text>
+
+  <!-- pattern -->
+  <g transform="translate(36,108)">
+    <circle cx="34" cy="34" r="30" fill="#2A9D8F"/>
+    <g style="--dur:1.8s"><text class="face f f1" x="34" y="34">•_•</text><text class="face f f2" x="34" y="34">•o•</text></g>
+    <text class="name ink" x="84" y="26">pattern</text><text class="role soft" x="182" y="26">analyser · autistic systemizing</text>
+    <text class="body ink" x="84" y="50">Reads literally, bottom-up. Every file, symbol and call site with file:line.</text>
+    <text class="body soft" x="84" y="72">Guardrail: read-only, 3 min, 300 words</text>
+  </g>
+  <!-- mapper -->
+  <g transform="translate(36,196)">
+    <circle cx="34" cy="34" r="30" fill="#C77F00"/>
+    <g class="q" style="--dur:2.4s"><text class="face f f1" x="34" y="34">•_•</text><text class="face f f2" x="34" y="34">•_•·</text><text class="face f f3" x="34" y="34">•_•··</text><text class="face f f4" x="34" y="34">•_•·</text></g>
+    <text class="name ink" x="84" y="26">mapper</text><text class="role soft" x="168" y="26">thinker · dyslexic big picture</text>
+    <text class="body ink" x="84" y="50">Sees how the parts connect and turns evidence into a numbered, verifiable plan.</text>
+    <text class="body soft" x="84" y="72">Guardrail: starts from pattern's evidence</text>
+  </g>
+  <!-- hyperfocus -->
+  <g transform="translate(36,284)">
+    <circle class="pulse" cx="34" cy="34" r="30" fill="#E4572E"/>
+    <g style="--dur:0.7s"><text class="face f f1" x="34" y="34">⌐■_■</text><text class="face f f2" x="34" y="34">⌐■‿■</text></g>
+    <text class="name ink" x="84" y="26">hyperfocus</text><text class="role soft" x="210" y="26">implementer · ADHD sprints</text>
+    <text class="body ink" x="84" y="50">Momentum on one step at a time. Tangents go to a parking lot, not the diff.</text>
+    <text class="body soft" x="84" y="72">Guardrail: re-reads the plan, 30 min timebox</text>
+  </g>
+  <!-- literal -->
+  <g transform="translate(36,372)">
+    <circle cx="34" cy="34" r="30" fill="#3A6EA5"/>
+    <g style="--dur:3s"><text class="face f f1" x="34" y="34">•_•</text><text class="face f f2" x="34" y="34">•_•</text></g>
+    <text class="name ink" x="84" y="26">literal</text><text class="role soft" x="176" y="26">reviewer · rule-keeping, fairness</text>
+    <text class="body ink" x="84" y="50">Checks the diff against the user's exact words. Flags anything done silently.</text>
+    <text class="body soft" x="84" y="72">Guardrail: read-only, 10 findings, explicit verdict</text>
+  </g>
+  <!-- bodydouble -->
+  <g transform="translate(36,460)">
+    <circle cx="34" cy="34" r="30" fill="#8E6CC4"/>
+    <g style="--dur:4s"><text class="face f f1" x="34" y="34">•_•</text><text class="face f f2" x="34" y="34">-_-</text></g>
+    <text class="name ink" x="84" y="26">bodydouble</text><text class="role soft" x="210" y="26">advisor · ADHD body doubling</text>
+    <text class="body ink" x="84" y="50">Sits with the main agent after edits and speaks only when work drifts.</text>
+    <text class="body soft" x="84" y="72">Guardrail: one line, silent when on track</text>
+  </g>
+</svg>

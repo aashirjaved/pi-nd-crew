@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>nd-crew for Pi</title>
+<meta name="description" content="Five specialist subagents for the Pi coding agent, and a status line that shows what each one is doing, what it costs and how full the context is.">
+<meta property="og:title" content="nd-crew for Pi">
+<meta property="og:description" content="Five specialist subagents and a status line that shows what each one is doing.">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/aashirjaved/pi-nd-crew@main/assets/nd-crew.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+	--paper: #EEEAF8;
+	--paper-2: #E2DCF3;
+	--ink: #1E1B3A;
+	--ink-soft: #5B5480;
+	--term: #151230;
+	--shadow: #C9BFEA;
+	--pattern: #2A9D8F;
+	--mapper: #C77F00;
+	--hyperfocus: #E4572E;
+	--literal: #3A6EA5;
+	--bodydouble: #8E6CC4;
+	--measure: 68ch;
+	--display: "Bricolage Grotesque", system-ui, sans-serif;
+	--body: "Atkinson Hyperlegible", system-ui, sans-serif;
+	--mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--paper: #17142E; --paper-2: #211D3F; --ink: #EEEAF8; --ink-soft: #B3ABD6; --term: #0E0C20; --shadow: #2E2858;
+	}
+}
+* { box-sizing: border-box; }
+html { background: var(--paper); color: var(--ink); overflow-x: hidden; }
+body { margin: 0; font: 400 1.0625rem/1.6 var(--body); }
+a { color: inherit; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--hyperfocus); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+header.top { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; font-weight: 700; }
+header.top nav { display: flex; gap: 22px; font-weight: 400; }
+.logo { font: 800 1.25rem var(--display); letter-spacing: -0.02em; text-decoration: none; }
+
+.hero { padding: 36px 0 56px; }
+.hero h1 { font: 800 clamp(2.6rem, 6.4vw, 5.2rem)/0.98 var(--display); letter-spacing: -0.035em; margin: 0 0 22px; max-width: 14ch; }
+.hero p.lede { font-size: 1.25rem; max-width: 52ch; color: var(--ink-soft); margin: 0 0 28px; }
+.install { display: flex; width: fit-content; align-items: center; gap: 14px; background: var(--ink); color: var(--paper); padding: 12px 14px 12px 18px; border-radius: 12px; font: 400 0.95rem var(--mono); max-width: 100%; }
+.install code { overflow-x: auto; white-space: nowrap; min-width: 0; }
+.install button { font: 700 0.85rem var(--body); background: var(--paper); color: var(--ink); border: 0; border-radius: 8px; padding: 7px 12px; cursor: pointer; flex: none; }
+.terminal { margin: 40px -24px 0; }
+.terminal video, .terminal img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+.caption { color: var(--ink-soft); font-size: 0.95rem; margin-top: 18px; }
+
+section { padding: 64px 0; border-top: 2px solid var(--paper-2); }
+h2 { font: 800 clamp(1.9rem, 3.6vw, 2.75rem)/1.05 var(--display); letter-spacing: -0.03em; margin: 0 0 14px; max-width: 22ch; }
+.intro { max-width: var(--measure); color: var(--ink-soft); margin: 0 0 36px; }
+
+.crew { display: grid; gap: 4px; }
+.member { display: grid; grid-template-columns: 76px 1fr; gap: 20px; align-items: start; padding: 18px 0; }
+.member + .member { border-top: 1px dashed var(--shadow); }
+.face { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; color: #fff; font: 700 0.95rem var(--mono); position: relative; }
+.face span { position: absolute; opacity: 0; animation: face var(--d, 2s) steps(1, end) infinite; }
+.face span:first-child { animation-delay: 0s; }
+.face span:last-child { animation-delay: calc(var(--d, 2s) / -2); }
+@keyframes face { 0% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.member h3 { margin: 0; font: 700 1.2rem var(--mono); display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; }
+.member h3 small { font: 700 0.95rem var(--body); color: var(--ink-soft); }
+.member p { margin: 4px 0 0; max-width: var(--measure); }
+.member .guard { color: var(--ink-soft); font-size: 0.95rem; }
+
+.diagram { width: 100%; height: auto; border-radius: 22px; }
+
+dl.anatomy { display: grid; grid-template-columns: minmax(150px, 220px) 1fr; gap: 14px 28px; margin: 0; max-width: 900px; }
+dl.anatomy dt { font: 700 1rem var(--mono); }
+dl.anatomy dd { margin: 0; color: var(--ink-soft); }
+
+table { border-collapse: collapse; width: 100%; font-size: 1rem; }
+th, td { text-align: left; padding: 12px 14px; vertical-align: top; border-bottom: 1px solid var(--paper-2); }
+thead th { font: 800 1rem var(--display); border-bottom: 2px solid var(--ink); }
+tbody th { font-weight: 700; width: 30%; }
+td.yes { font-weight: 700; }
+.measured td:first-child { font: 700 0.95rem var(--mono); white-space: nowrap; width: 1%; padding-right: 28px; }
+.table-scroll { overflow-x: auto; }
+
+ol.steps { padding-left: 1.4em; max-width: var(--measure); }
+ol.steps li { margin-bottom: 14px; }
+ol.steps code, p code, td code { font: 400 0.92em var(--mono); background: var(--paper-2); padding: 1px 6px; border-radius: 5px; }
+
+footer { padding: 40px 0 60px; color: var(--ink-soft); border-top: 2px solid var(--paper-2); display: flex; flex-wrap: wrap; gap: 18px; justify-content: space-between; }
+
+@media (max-width: 640px) {
+	header.top nav { gap: 14px; font-size: 0.95rem; }
+	.member { grid-template-columns: 56px 1fr; gap: 14px; }
+	.face { width: 52px; height: 52px; font-size: 0.8rem; }
+	dl.anatomy { grid-template-columns: 1fr; gap: 4px; }
+	dl.anatomy dd { margin-bottom: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.face span { animation: none; }
+	.face span:first-child { opacity: 1; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+	<header class="top">
+		<a class="logo" href="#">nd-crew</a>
+		<nav aria-label="Primary">
+			<a href="#crew">Crew</a>
+			<a href="#compare">Compare</a>
+			<a href="https://github.com/aashirjaved/pi-nd-crew">GitHub</a>
+		</nav>
+	</header>
+
+	<main>
+		<div class="hero">
+			<h1>A crew you can watch work.</h1>
+			<p class="lede">Five specialist subagents for Pi, and a status line that shows what each one is doing right now, what it has spent, and how full your context is.</p>
+			<div class="install">
+				<code id="cmd">pi install npm:pi-subagents &amp;&amp; pi install npm:pi-nd-crew</code>
+				<button type="button" id="copy">Copy</button>
+			</div>
+			<div class="terminal">
+				<video id="demo" autoplay muted loop playsinline preload="metadata"
+					poster="https://cdn.jsdelivr.net/gh/aashirjaved/pi-nd-crew@main/assets/nd-crew.webp"
+					aria-label="Pi running an orchestrated task. The footer shows each worker's face, current tool, tokens and cost while the phase strip moves from analyse to review.">
+					<source src="https://cdn.jsdelivr.net/gh/aashirjaved/pi-nd-crew@main/assets/nd-crew.mp4" type="video/mp4">
+				</video>
+			</div>
+			<p class="caption">Rendered by the extension's own drawing code. Type <code>orchestrate</code> in a prompt, or run <code>/ship &lt;task&gt;</code>.</p>
+		</div>
+
+		<section id="crew" aria-labelledby="crew-h">
+			<h2 id="crew-h">Five strengths, each with a guardrail</h2>
+			<p class="intro">The personas use words neurodivergent people use about themselves: hyperfocus, monotropism, body doubling, spoons. Each persona works the way its strength works. Its tools and limits cover the matching weak spot.</p>
+			<div class="crew">
+				<div class="member">
+					<div class="face" style="background:var(--pattern);--d:1.8s" aria-hidden="true"><span>•_•</span><span>•o•</span></div>
+					<div><h3>pattern <small>Analyser, autistic systemizing</small></h3>
+					<p>Reads the request literally and works bottom-up. Returns every relevant file, symbol and call site with file:line, plus any inconsistencies it noticed.</p>
+					<p class="guard">Read-only, three-minute limit, 300 words.</p></div>
+				</div>
+				<div class="member">
+					<div class="face" style="background:var(--mapper);--d:2.4s" aria-hidden="true"><span>•_•</span><span>•_•·</span></div>
+					<div><h3>mapper <small>Thinker, dyslexic big picture</small></h3>
+					<p>Sees how the parts connect and turns pattern's evidence into a numbered plan: goal, steps, risks and the exact commands that prove it worked.</p>
+					<p class="guard">Read-only, and it starts from pattern's evidence instead of rescanning the repo.</p></div>
+				</div>
+				<div class="member">
+					<div class="face" style="background:var(--hyperfocus);--d:0.7s" aria-hidden="true"><span>⌐■_■</span><span>⌐■‿■</span></div>
+					<div><h3>hyperfocus <small>Implementer, ADHD sprints</small></h3>
+					<p>Momentum on one step at a time. Ideas outside the step go to a parking lot instead of the diff.</p>
+					<p class="guard">Saves the plan to a file and re-reads it before each step. Thirty-minute timebox. The footer's flame shows drift.</p></div>
+				</div>
+				<div class="member">
+					<div class="face" style="background:var(--literal);--d:3s" aria-hidden="true"><span>•_•</span><span>•_•</span></div>
+					<div><h3>literal <small>Reviewer, rule-keeping and fairness</small></h3>
+					<p>Checks the diff against the plan and your exact words. Flags anything done that you did not ask for, and anything skipped without telling you.</p>
+					<p class="guard">Read-only, ten findings at most, an explicit approve or request-changes verdict.</p></div>
+				</div>
+				<div class="member">
+					<div class="face" style="background:var(--bodydouble);--d:4s" aria-hidden="true"><span>•_•</span><span>-_-</span></div>
+					<div><h3>bodydouble <small>Advisor, ADHD body doubling</small></h3>
+					<p>Sits with the main agent after an edit-heavy prompt and reads the changes. Speaks only when work drifts from what you asked.</p>
+					<p class="guard">One line. Silent when everything is on track.</p></div>
+				</div>
+			</div>
+		</section>
+
+		<section aria-labelledby="flow-h">
+			<h2 id="flow-h">From prompt to approved diff</h2>
+			<p class="intro">Requested changes go back to hyperfocus, up to three rounds. You approve the plan before any code changes, unless you have already said to proceed.</p>
+			<img class="diagram" src="https://cdn.jsdelivr.net/gh/aashirjaved/pi-nd-crew@main/assets/pipeline.svg" alt="pattern analyses, mapper plans, hyperfocus builds, literal reviews; changes loop back to hyperfocus up to three times; bodydouble watches the main agent's edits" width="920" height="300">
+		</section>
+
+		<section aria-labelledby="footer-h">
+			<h2 id="footer-h">Everything in three lines</h2>
+			<p class="intro">The footer never grows past three lines. Live workers always say what they are doing. Finished ones shrink to small chips on narrow terminals.</p>
+			<dl class="anatomy">
+				<dt>Phase strip</dt><dd>Analyse, plan, build, review, the review round, and elapsed time.</dd>
+				<dt>Main line</dt><dd>Model and thinking level, context fill with exact tokens, session cost to four decimals, what the workers have spent, cache hit rate.</dd>
+				<dt>Sprite faces</dt><dd>Reading, editing, running, thinking, waiting for an answer, done, failed or stopped, next to the tool and file it is using.</dd>
+				<dt>The flame</dt><dd>Hyperfocus's drift meter. It heats up to amber, then red, as edits pile up without a plan re-read.</dd>
+				<dt>Spoons</dt><dd>Your session budget. When it runs out, new subagents are blocked until you raise it with <code>/nd spoons</code>.</dd>
+				<dt>≈$</dt><dd>A live estimate that turns exact when the run reports final usage.</dd>
+				<dt>alt+a</dt><dd>The fleet view: every worker's model, tokens, cache, cost and last output, with steer and stop.</dd>
+			</dl>
+		</section>
+
+		<section aria-labelledby="measured-h">
+			<h2 id="measured-h">Measured on its own repository</h2>
+			<p class="intro">No benchmarks we cannot show you. These come from running nd-crew while building nd-crew.</p>
+			<div class="table-scroll"><table class="measured">
+				<tbody>
+					<tr><td>+0% CPU</td><td>Idle CPU with and without nd-crew over a fifteen-second sample. Animation timers only run while a worker is live.</td></tr>
+					<tr><td>3 lines</td><td>The most the footer ever takes, at any width from sixty columns up.</td></tr>
+					<tr><td>0 deps</td><td>No runtime dependencies. About 80 kB of TypeScript that Pi loads as source.</td></tr>
+					<tr><td>34 tests</td><td>Including a replay of a real <code>/ship</code> run's event stream.</td></tr>
+					<tr><td>~2 min</td><td>The crew implemented one of its own features through <code>orchestrate</code>: refactor plus tests, approved by literal in the first round.</td></tr>
+				</tbody>
+			</table></div>
+		</section>
+
+		<section id="compare" aria-labelledby="compare-h">
+			<h2 id="compare-h">What it adds to pi-subagents</h2>
+			<p class="intro">nd-crew runs on top of pi-subagents and uses the same engine. oh-my-pi builds roles, an advisor and an agent hub into a fork of Pi. nd-crew brings that way of working to stock Pi as one package.</p>
+			<div class="table-scroll"><table>
+				<thead><tr><th scope="col"></th><th scope="col">pi-subagents alone</th><th scope="col">with nd-crew</th></tr></thead>
+				<tbody>
+					<tr><th scope="row">Specialist agents</th><td>General builtins: scout, worker, reviewer, oracle</td><td class="yes">Five personas with matched guardrails and fixed handoffs</td></tr>
+					<tr><th scope="row">Start a crew run</th><td>Prompt templates such as <code>/review-loop</code></td><td class="yes">Say <code>orchestrate</code>, or run <code>/ship</code></td></tr>
+					<tr><th scope="row">Watching workers</th><td>Its own widget and FleetView</td><td class="yes">One footer for the main session and every worker</td></tr>
+					<tr><th scope="row">Drift meter, phase strip, timebox</th><td></td><td class="yes">Yes</td></tr>
+					<tr><th scope="row">Advisor after edits</th><td>Ask the oracle</td><td class="yes">Automatic, one line, silent when on track</td></tr>
+					<tr><th scope="row">Session-wide spend cap</th><td></td><td class="yes">Spoons budget blocks new subagents</td></tr>
+					<tr><th scope="row">Low-sensory mode</th><td></td><td class="yes"><code>/nd calm</code>, <code>NO_COLOR</code>, <code>PI_REDUCED_MOTION=1</code></td></tr>
+				</tbody>
+			</table></div>
+		</section>
+
+		<section aria-labelledby="start-h">
+			<h2 id="start-h">Start in a minute</h2>
+			<ol class="steps">
+				<li>Install the engine: <code>pi install npm:pi-subagents</code></li>
+				<li>Install the crew: <code>pi install npm:pi-nd-crew</code></li>
+				<li>Remove any other footer package. Pi shows one footer.</li>
+				<li>In Pi, type <code>orchestrate</code> followed by your task, or run <code>/ship &lt;task&gt;</code>. Press <code>alt+a</code> to see every worker.</li>
+			</ol>
+		</section>
+	</main>
+
+	<footer>
+		<span>MIT licensed. Built for <a href="https://pi.dev">Pi</a>.</span>
+		<span><a href="https://github.com/aashirjaved/pi-nd-crew">Source</a> · <a href="https://www.npmjs.com/package/pi-nd-crew">npm</a> · <a href="https://pi.dev/packages/pi-nd-crew">pi.dev</a></span>
+	</footer>
+</div>
+<script>
+	const btn = document.getElementById("copy");
+	btn.addEventListener("click", async () => {
+		try {
+			await navigator.clipboard.writeText(document.getElementById("cmd").textContent);
+			btn.textContent = "Copied";
+		} catch {
+			btn.textContent = "Select and copy";
+		}
+		setTimeout(() => (btn.textContent = "Copy"), 1800);
+	});
+	if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+		const v = document.getElementById("demo");
+		v.removeAttribute("autoplay");
+		v.pause();
+		v.controls = true;
+	}
+</script>
+</body>
+</html>

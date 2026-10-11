@@ -1,7 +1,7 @@
 {
   "name": "pi-nd-crew",
   "version": "0.1.1",
-  "description": "Neurodivergent crew for Pi: five strengths-based subagent personas (autistic analyser, dyslexic thinker, ADHD implementer, literal reviewer, body double) with an animated minions status line showing live cost, context and what each worker is doing.",
+  "description": "Five specialist subagents for Pi and an animated status line that shows what each one is doing, what it costs and how full your context is.",
   "type": "module",
   "license": "MIT",
   "author": "nd-crew contributors",
@@ -9,7 +9,7 @@
     "type": "git",
     "url": "git+https://github.com/aashirjaved/pi-nd-crew.git"
   },
-  "homepage": "https://github.com/aashirjaved/pi-nd-crew#readme",
+  "homepage": "https://aashirjaved.github.io/pi-nd-crew/",
   "bugs": {
     "url": "https://github.com/aashirjaved/pi-nd-crew/issues"
   },

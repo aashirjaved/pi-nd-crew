@@ -146,16 +146,16 @@ function frameHtml(frame: number): string {
 	const lines = [...renderHud({ minions, budgetUsd: 5, spent: model.main.cost + kids, parkingLot: 1 }, COLS, theme, opts), "", ...renderFooter(model, COLS, theme, opts)].map(ansiToHtml);
 	const rule = `<span style="color:#334155">${"─".repeat(COLS)}</span>`;
 	return `<!doctype html><meta charset="utf-8"><style>
-html,body{margin:0;width:${W}px;height:${H}px;background:radial-gradient(1200px 700px at 20% 0%,#312e81 0%,#0b1020 55%,#05070d 100%);font-family:Menlo,"SF Mono",monospace}
-.win{position:absolute;left:56px;top:70px;width:${W - 112}px;height:${H - 140}px;background:#0b1120;border:1px solid #1e293b;border-radius:14px;box-shadow:0 30px 80px #000a;overflow:hidden}
-.bar{height:38px;background:#111827;display:flex;align-items:center;gap:8px;padding:0 16px;color:#94a3b8;font-size:13px}
+html,body{margin:0;width:${W}px;height:${H}px;background:#EEEAF8;font-family:Menlo,"SF Mono",monospace}
+.win{position:absolute;left:56px;top:84px;width:${W - 112}px;height:${H - 140}px;background:#151230;border:2px solid #1E1B3A;border-radius:18px;box-shadow:12px 12px 0 #C9BFEA;overflow:hidden}
+.bar{height:38px;background:#1E1B3A;display:flex;align-items:center;gap:8px;padding:0 16px;color:#94a3b8;font-size:13px}
 .dot{width:12px;height:12px;border-radius:50%}
 pre{margin:0;padding:18px 22px;color:#e2e8f0;font-size:17.5px;line-height:1.5;white-space:pre}
-.title{position:absolute;left:58px;top:22px;color:#e0e7ff;font:600 26px -apple-system,Helvetica,sans-serif;letter-spacing:.2px}
-.title span{color:#a5b4fc;font-weight:400;font-size:18px;margin-left:12px}
+.title{position:absolute;left:58px;top:26px;color:#1E1B3A;font:800 30px -apple-system,Helvetica,sans-serif;letter-spacing:-.5px}
+.title span{color:#5B5480;font-weight:500;font-size:19px;margin-left:14px;letter-spacing:0}
 .bottom{position:absolute;left:0;right:0;bottom:0}
 </style>
-<div class="title">nd-crew<span>a neurodivergent crew for Pi · live minions status line</span></div>
+<div class="title">nd-crew<span>five specialist subagents and a status line that shows what each one is doing</span></div>
 <div class="win"><div class="bar"><div class="dot" style="background:#f87171"></div><div class="dot" style="background:#fbbf24"></div><div class="dot" style="background:#34d399"></div><span style="margin-left:10px">pi — ~/code/cli</span></div>
 <pre>${transcript.join("\n")}</pre>
 <div class="bottom"><pre>${lines.join("\n")}\n${rule}\n<span style="color:${PALETTE.accent}">›</span> <span style="color:#475569">type a message, or alt+a for the fleet</span></pre></div></div>`;
@@ -174,5 +174,14 @@ for (let f = 0; f < frames; f++) {
 process.stdout.write("\n");
 execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-framerate", String(FPS), "-i", join(tmp, "f%03d.png"), "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "24", "-movflags", "+faststart", join(out, "nd-crew.mp4")]);
 execFileSync("cwebp", ["-quiet", "-q", "82", join(tmp, `f${String(Math.floor(FPS * 8.6)).padStart(3, "0")}.png`), "-o", join(out, "nd-crew.webp")]);
+// Animated WebP for the README: every other frame, 1200 px wide.
+const small: string[] = [];
+for (let f = 0; f < frames; f += 2) {
+	const src = join(tmp, `f${String(f).padStart(3, "0")}.png`);
+	const dst = join(tmp, `s${String(f).padStart(3, "0")}.png`);
+	execFileSync("sips", ["-Z", "1200", src, "--out", dst], { stdio: "ignore" });
+	small.push(dst);
+}
+execFileSync("img2webp", ["-loop", "0", "-lossy", "-q", "72", "-d", String(Math.round(2000 / FPS)), ...small, "-o", join(out, "hero.webp")], { stdio: "ignore" });
 rmSync(tmp, { recursive: true, force: true });
-console.log(`wrote ${join(out, "nd-crew.mp4")} and ${join(out, "nd-crew.webp")}`);
+console.log(`wrote nd-crew.mp4, nd-crew.webp, hero.webp to ${out}`);
