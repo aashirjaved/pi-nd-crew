@@ -33,7 +33,7 @@
     "workflows/*.js",
     "skills/**/*.md",
     "examples/*.json",
-    "assets/*.webp",
+    "assets/nd-crew.webp",
     "assets/*.mp4",
     "README.md",
     "LICENSE",
